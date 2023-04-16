@@ -29,13 +29,16 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const { message, Token } = await loginUser();
+        const res = await loginUser();
+        const { message, Token, User } = res;
+        console.log(res);
 
         if (message === 'Login Success') {
             localStorage.setItem('token', Token);
-            const decoded = jwt_decode(Token);
 
-            localStorage.setItem('user', JSON.stringify(decoded));
+            navigate('/');
+
+            localStorage.setItem('user', JSON.stringify(User));
         }
     };
     return (
