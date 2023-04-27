@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+    createBrowserRouter,
+    Navigate,
+    RouterProvider,
+} from 'react-router-dom';
 
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
@@ -10,6 +14,9 @@ import ProductsList from './Pages/Products/ProductsList';
 import AddProducts from './Pages/Products/AddProducts';
 import UpdateProduct from './Pages/Products/UpdateProduct';
 import { Profile } from './Pages/Auth/Profile';
+import { useUserContext } from './context/userContext.jsx';
+import ProtectedRoute from './ProtectedRoute';
+import BookContextProvider from './context/bookContext';
 
 const router = createBrowserRouter([
     {
@@ -29,15 +36,28 @@ const router = createBrowserRouter([
                 children: [
                     {
                         index: true,
-                        element: <ProductsList />,
+                        element: (
+                            <ProtectedRoute>
+                                <ProductsList />
+                            </ProtectedRoute>
+                        ),
                     },
                     {
                         path: 'addBook',
-                        element: <AddProducts />,
+                        element: (
+                            <ProtectedRoute>
+                                {' '}
+                                <AddProducts />
+                            </ProtectedRoute>
+                        ),
                     },
                     {
                         path: 'updateBook/:bookId',
-                        element: <UpdateProduct />,
+                        element: (
+                            <ProtectedRoute>
+                                <UpdateProduct />
+                            </ProtectedRoute>
+                        ),
                     },
                 ],
             },
@@ -54,8 +74,20 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+    const { getUserFromLocalStorage, setIsLoggedIn } = useUserContext();
+
+    useEffect(() => {
+        if (getUserFromLocalStorage()) setIsLoggedIn(true);
+        else <Navigate to="/login" />;
+    }, []);
+
     return (
-        <RouterProvider router={router} fallbackElement={<h1>Loading...</h1>} />
+        <BookContextProvider>
+            <RouterProvider
+                router={router}
+                fallbackElement={<h1>Loading...</h1>}
+            />
+        </BookContextProvider>
     );
 };
 

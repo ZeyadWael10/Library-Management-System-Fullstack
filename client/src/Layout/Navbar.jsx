@@ -1,7 +1,15 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../context/userContext';
 
 const Navbar = () => {
-    const loggedIn = localStorage.getItem('token');
+    const { isLoggedIn, logout } = useUserContext();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+
+        navigate('/login');
+    };
 
     return (
         <>
@@ -27,7 +35,7 @@ const Navbar = () => {
                     id="navbarSupportedContent"
                 >
                     <ul className="navbar-nav">
-                        {loggedIn ? (
+                        {isLoggedIn ? (
                             <>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="">
@@ -43,6 +51,15 @@ const Navbar = () => {
                                     <NavLink className="nav-link" to="profile">
                                         Profile
                                     </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <a
+                                        className="nav-link text-danger"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </a>
                                 </li>
                             </>
                         ) : (

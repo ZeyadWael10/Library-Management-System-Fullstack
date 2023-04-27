@@ -38,8 +38,6 @@ const BooksList = () => {
             author={book.author}
             borrowed={book.isBorrowed}
             id={book._id}
-            setDeleted={setDeleted}
-            deleted={deleted}
         />
     ));
 

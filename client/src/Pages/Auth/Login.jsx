@@ -2,22 +2,20 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../context/userContext';
 
 const Login = () => {
     const navigate = useNavigate();
+    const {
+        saveUserToLocalStorage,
+        saveTokenToLocalStorage,
+        setIsLoggedIn,
+        loginUser,
+    } = useUserContext();
     const [user, setUser] = useState({
         email: '',
         password: '',
     });
-
-    // Register user
-    const loginUser = async (e) => {
-        const { data } = await axios.post(
-            'http://localhost:3000/api/v1/user/login',
-            user
-        );
-        return data;
-    };
 
     // Handle form
     const handleChange = (event) => {
@@ -29,18 +27,20 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const res = await loginUser();
+        const res = await loginUser(user);
         const { message, Token, User } = res;
         console.log(res);
 
         if (message === 'Login Success') {
-            localStorage.setItem('token', Token);
+            saveTokenToLocalStorage(Token);
+            saveUserToLocalStorage(User);
+
+            setIsLoggedIn(true);
 
             navigate('/');
-
-            localStorage.setItem('user', JSON.stringify(User));
         }
     };
+
     return (
         <form className="login-form" onSubmit={handleSubmit}>
             <h2 className="my-4">Login</h2>

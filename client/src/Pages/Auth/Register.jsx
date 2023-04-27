@@ -1,23 +1,19 @@
 import axios from 'axios';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../context/userContext';
 
 const Register = () => {
+    const { registerUser } = useUserContext();
     const [user, setUser] = useState({
         name: '',
         email: '',
         password: '',
         age: 0,
+        isAdmin: false,
     });
 
-    // Register user
-    const registerUser = async (e) => {
-        const { data } = await axios.post(
-            'http://localhost:3000/api/v1/user/signup',
-            user
-        );
-        return data;
-    };
+    const navigate = useNavigate();
 
     // Handle form
     const handleChange = (event) => {
@@ -29,7 +25,11 @@ const Register = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        const data = await registerUser();
+        const data = await registerUser(user);
+
+        if (data.User) {
+            navigate('/login');
+        }
     };
 
     return (
@@ -38,13 +38,13 @@ const Register = () => {
 
             {/* <!-- name input --> */}
             <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="form2Example2">
+                <label className="form-label" htmlFor="name">
                     Name
                 </label>
                 <input
                     onChange={handleChange}
                     type="text"
-                    id="form2Example2"
+                    id="name"
                     name="name"
                     className="form-control"
                 />
@@ -52,28 +52,28 @@ const Register = () => {
 
             {/* <!-- Email input --> */}
             <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="form2Example1">
+                <label className="form-label" htmlFor="email">
                     Email address
                 </label>
                 <input
                     onChange={handleChange}
                     type="email"
                     name="email"
-                    id="form2Example1"
+                    id="email"
                     className="form-control"
                 />
             </div>
 
             {/* <!-- Password input --> */}
             <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="form2Example2">
+                <label className="form-label" htmlFor="password">
                     Password
                 </label>
                 <input
                     onChange={handleChange}
                     type="password"
                     name="password"
-                    id="form2Example2"
+                    id="password"
                     className="form-control"
                 />
             </div>
