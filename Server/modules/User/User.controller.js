@@ -134,9 +134,9 @@ export const ResetPassword = async (req, res, next) => {
     const { email, resetCode, password } = req.body;
     const user = await UserModel.findOne({
         email,
-        confirmed: true,
-        isLoggedIn: false,
+        confirmed: true
     });
+    console.log(user)
     if (!user) return next(new Error('User Notfound'));
     if (
         resetCode !== user.resetPasawordCode ||
@@ -147,7 +147,7 @@ export const ResetPassword = async (req, res, next) => {
             .json({ message: 'Invalid or expired reset code' });
     const hashedPassword = hashingFunction({ payload: password });
     await UserModel.findOneAndUpdate(
-        { email, confirmed: true, isLoggedIn: false },
+        { email, confirmed: true },
         {
             password: hashedPassword,
             resetPasawordCode: '',

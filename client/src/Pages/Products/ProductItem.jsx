@@ -20,12 +20,12 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
           <h3 className="h5 fw-semibold mb-0">{title}</h3>
           <p className=" mt-0 text-success">{author}</p>
           <div className="cta">
-            <button className="btn d-block btn-outline-info w-100 my-2">
+            {/* <button className="btn d-block btn-outline-info w-100 my-2">
               Details
             </button>
             <button className="btn d-block btn-success w-100 my-2">
               Add to cart
-            </button>
+            </button> */}
             <div className="d-flex gap-2">
               <Link
                 to={`/products/updateBook/${id}`}
