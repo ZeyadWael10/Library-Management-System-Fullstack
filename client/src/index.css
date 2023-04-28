@@ -6,6 +6,7 @@ body {
     overflow-x: hidden;
 }
 .main-wrapper {
+    
     margin-top: 74px;
 }
 
@@ -463,13 +464,17 @@ a:focus {
     padding: 16px;
 }
 
-.custom_nav-container a.active {
+.custom_nav-container a.active , .profile a.active {
     background: #042532;
     border-radius: 8px;
 }
 
 a.navbar-brand.active {
     background: transparent;
+}
+
+.profile a.active {
+    color: #fff;
 }
 
 /* Products */

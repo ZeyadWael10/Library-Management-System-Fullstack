@@ -1,106 +1,82 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useBookContext } from "../../context/bookContext";
 
 const UpdateProduct = () => {
-    const { bookId } = useParams();
-    const [book, setBook] = useState({
-        name: '',
-        author: '',
+  const { bookId } = useParams();
+  const { updateBook, getBookDetails } = useBookContext();
+  const [book, setBook] = useState({
+    name: "",
+    author: "",
+  });
+  const navigate = useNavigate();
+
+  const displayBookDetails = async () => {
+    const bookData = await getBookDetails(bookId);
+
+    const { name, author } = bookData;
+    setBook({ ...book, name, author });
+  };
+
+  useEffect(() => {
+    displayBookDetails();
+  }, []);
+
+  // Handle form
+  const handleChange = (event) => {
+    console.log(book);
+    setBook({
+      ...book,
+      [event.target.name]: event.target.value,
     });
-    const navigate = useNavigate();
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-    const token = localStorage.getItem('token');
+    const data = await updateBook(bookId, book);
+    if (data) {
+      navigate("/products");
+    }
+  };
 
-    const getBookDetails = () => {
-        axios
-            .get(`http://localhost:3000/api/v1/book/id/${bookId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then((res) => {
-                const { name, author } = res.data.Books;
-                console.log(name, author);
-                setBook({ ...book, name, author });
-            });
-    };
+  return (
+    <form className="login-form" onSubmit={handleSubmit}>
+      <h2 className="my-4">Update Book</h2>
 
-    useEffect(() => {
-        getBookDetails();
-    }, []);
+      {/* <!-- name input --> */}
+      <div className="form-outline mb-3">
+        <label className="form-label" htmlFor="form2Example2">
+          Book Name
+        </label>
+        <input
+          onChange={handleChange}
+          type="text"
+          id="form2Example2"
+          name="name"
+          className="form-control"
+          value={book.name}
+        />
+      </div>
 
-    // update Book
-    const updateBook = async (e) => {
-        const { data } = await axios.post(
-            `http://localhost:3000/api/v1/book/updatebook/${bookId}`,
-            book,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        return data;
-    };
+      {/* <!-- Email input --> */}
+      <div className="form-outline mb-3">
+        <label className="form-label" htmlFor="form2Example1">
+          Author
+        </label>
+        <input
+          onChange={handleChange}
+          type="text"
+          name="author"
+          id="form2Example1"
+          className="form-control"
+          value={book.author}
+        />
+      </div>
 
-    // Handle form
-    const handleChange = (event) => {
-        console.log(book);
-        setBook({
-            ...book,
-            [event.target.name]: event.target.value,
-        });
-    };
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const data = await updateBook();
-        if (data) {
-            navigate('/products');
-        }
-    };
-
-    return (
-        <form className="login-form" onSubmit={handleSubmit}>
-            <h2 className="my-4">Update Book</h2>
-
-            {/* <!-- name input --> */}
-            <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="form2Example2">
-                    Book Name
-                </label>
-                <input
-                    onChange={handleChange}
-                    type="text"
-                    id="form2Example2"
-                    name="name"
-                    className="form-control"
-                    value={book.name}
-                />
-            </div>
-
-            {/* <!-- Email input --> */}
-            <div className="form-outline mb-3">
-                <label className="form-label" htmlFor="form2Example1">
-                    Author
-                </label>
-                <input
-                    onChange={handleChange}
-                    type="text"
-                    name="author"
-                    id="form2Example1"
-                    className="form-control"
-                    value={book.author}
-                />
-            </div>
-
-            {/* <!-- Submit button --> */}
-            <button className="btn btn-primary btn-block mb-4">
-                Update Book{' '}
-            </button>
-        </form>
-    );
+      {/* <!-- Submit button --> */}
+      <button className="btn btn-primary btn-block mb-4">Update Book </button>
+    </form>
+  );
 };
 
 export default UpdateProduct;

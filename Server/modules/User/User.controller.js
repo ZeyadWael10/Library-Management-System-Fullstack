@@ -48,7 +48,8 @@ export const confirmEmail = async (req, res, next) => {
             { _id: decoded.id, confirmed: false },
             { confirmed: true, isLoggedIn: true }
         );
-        return res.json({ message: 'Email Confirmed...Plaese Try To Login' });
+        return res.send(`<h2>Email Confirmed...</h2> <p style="font-size : 20px"> Plaese Try To <a href="http://localhost:5173/login" style="font-weight : 700; color : blue ; font-size : 22px ; text-decoration: none;">Login</a> </p> `);
+        // return res.json({ message: 'Email Confirmed...Plaese Try To Login' });
     }
     res.status(201).json({ message: 'unknow error' });
 };
