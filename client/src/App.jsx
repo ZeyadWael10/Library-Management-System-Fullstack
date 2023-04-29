@@ -22,6 +22,9 @@ import GetEmail from "./Pages/Auth/GetEmail";
 import ProfileLayout from "./Pages/UserProfile/ProfileLayout";
 import UpdateAccount from "./Pages/UserProfile/UpdateAccount";
 import UpdatePassword from "./Pages/UserProfile/UpdatePassword";
+import CartItems from "./Pages/Products/CartItems";
+
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +74,15 @@ const router = createBrowserRouter([
             ),
           },
           {
+            path: "cart-items",
+            element: (
+              <ProtectedRoute>
+                {" "}
+                <CartItems />
+              </ProtectedRoute>
+            ),
+          },
+          {
             path: "updateBook/:bookId",
             element: (
               <ProtectedRoute>
@@ -101,16 +113,22 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const { getUserFromLocalStorage, setIsLoggedIn } = useUserContext();
+  const { getUserFromLocalStorage, setIsLoggedIn, setIsAdmin } =
+    useUserContext();
+  const user = getUserFromLocalStorage();
 
   useEffect(() => {
-    if (getUserFromLocalStorage()) setIsLoggedIn(true);
-    else <Navigate to="/login" />;
+    if (user) {
+      console.log(user);
+      setIsAdmin(user.isAdmin);
+      setIsLoggedIn(true);
+    } else <Navigate to="/login" />;
   }, []);
 
   return (
     <BookContextProvider>
       <RouterProvider router={router} fallbackElement={<h1>Loading...</h1>} />
+      <ToastContainer />
     </BookContextProvider>
   );
 };
