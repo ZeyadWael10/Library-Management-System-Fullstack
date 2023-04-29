@@ -13,7 +13,7 @@ export const sendEmail = async ({ to = "", subject = "", message = "" }) => {
         },
     });
     let info = await transporter.sendMail({
-        from: `E-Library ${process.env.SENDEREMAIL}`,
+        from: `Bostorek ${process.env.SENDEREMAIL}`,
         to,
         subject,
         html: message
