@@ -6,16 +6,16 @@ const ForgetPassword = () => {
     password: "",
     resetCode: "",
     email: localStorage.getItem("forgetpassword"),
-    confirmPassword: "",
   });
 
   const sendResetPassword = async () => {
     const { data } = await axios.post(
       `http://localhost:3000/api/v1/user/resetpassword`,
-      { resetPassword }
+      { ...resetPassword }
     );
 
     console.log(data);
+    console.log(resetPassword);
   };
 
   const handleChange = (event) => {
@@ -56,15 +56,6 @@ const ForgetPassword = () => {
           name="password"
           onChange={handleChange}
           value={resetPassword.password}
-          disabled={resetPassword.resetCode.length !== 6}
-        />
-        <input
-          type="text"
-          className="form-control w-75 mt-2 mb-3"
-          placeholder="confirm password"
-          name="confirmPassword"
-          onChange={handleChange}
-          value={resetPassword.confirmPassword}
           disabled={resetPassword.resetCode.length !== 6}
         />
 
