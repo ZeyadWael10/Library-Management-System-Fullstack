@@ -1,13 +1,47 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useBookContext } from "../../context/bookContext";
+import axios from "axios";
+import { useState } from "react";
 
 const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
   const navigate = useNavigate();
   const { deleteBook } = useBookContext();
+  const token = localStorage.getItem("token");
+
+  const [openBorrow, setOpenBorrow] = useState(false);
+  const [borrowedPeriod, setBorrowedPeriod] = useState("");
 
   const handleDeleteBook = async () => {
     const deleted = await deleteBook(id);
     if (deleted) navigate(0);
+  };
+
+  const handleBorrowBook = async () => {
+    const { data } = await axios.put(
+      `http://localhost:3000/api/v1/book/borrowbook/${id}`,
+      { BorrowedPeriod: +borrowedPeriod },
+      {
+        headers: {
+          Authorization: `LBMS__${token}`,
+        },
+      }
+    );
+
+    if (data.message === "Book Borrowed Successfully") navigate(0);
+  };
+
+  const handleReturnBook = async () => {
+    const { data } = await axios.put(
+      `http://localhost:3000/api/v1/book/returnbook/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `LBMS__${token}`,
+        },
+      }
+    );
+
+    if (data.message === "Book Returned Successfully") navigate(0);
   };
 
   return (
@@ -20,12 +54,50 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
           <h3 className="h5 fw-semibold mb-0">{title}</h3>
           <p className=" mt-0 text-success">{author}</p>
           <div className="cta">
-            {/* <button className="btn d-block btn-outline-info w-100 my-2">
-              Details
-            </button>
-            <button className="btn d-block btn-success w-100 my-2">
-              Add to cart
-            </button> */}
+            {!borrowed ? (
+              <div className="">
+                {openBorrow && (
+                  <input
+                    type="text"
+                    onChange={(e) => setBorrowedPeriod(e.target.value)}
+                    value={borrowedPeriod}
+                    placeholder="borrow in days"
+                    className="form-control"
+                  />
+                )}
+
+                {openBorrow ? (
+                  <div className="d-flex gap-2">
+                    <button
+                      onClick={handleBorrowBook}
+                      className="btn d-block btn-warning  my-2 flex-grow-1"
+                    >
+                      Borrow
+                    </button>
+                    <button
+                      onClick={() => setOpenBorrow(false)}
+                      className="btn d-block btn-outline-danger  my-2"
+                    >
+                      X
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setOpenBorrow(true)}
+                    className="btn d-block btn-warning w-100 my-2"
+                  >
+                    Get This Book
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={handleReturnBook}
+                className="btn d-block btn-outline-success w-100 my-2"
+              >
+                Return
+              </button>
+            )}
             <div className="d-flex gap-2">
               <Link
                 to={`/products/updateBook/${id}`}
