@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBookContext } from "../../context/bookContext";
+import { toast } from "react-toastify";
+import { successNotification } from "../../tostify";
 
 const UpdateProduct = () => {
   const { bookId } = useParams();
@@ -35,7 +37,11 @@ const UpdateProduct = () => {
 
     const data = await updateBook(bookId, book);
     if (data) {
-      navigate("/products");
+      successNotification(`Book Updated successfully, please wait..`);
+
+      setTimeout(() => {
+        navigate("/products");
+      }, 3000);
     }
   };
 

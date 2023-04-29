@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/userContext";
+import { errorNotification, successNotification } from "../../tostify";
 
 const Login = () => {
   const navigate = useNavigate();
-  const {
-    saveUserToLocalStorage,
-    saveTokenToLocalStorage,
-    setIsLoggedIn,
-    loginUser,
-  } = useUserContext();
+  const { setIsLoggedIn, loginUser } = useUserContext();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -26,16 +22,15 @@ const Login = () => {
     event.preventDefault();
 
     const res = await loginUser(user);
-    const { message, Token, User } = res;
-    console.log(res);
+    const { message } = res;
 
     if (message === "Login Success") {
-      saveTokenToLocalStorage(Token);
-      saveUserToLocalStorage(User);
-
       setIsLoggedIn(true);
+      successNotification("You are logged in", 2000);
 
       navigate("/");
+    } else {
+      errorNotification(message, 4000);
     }
   };
 

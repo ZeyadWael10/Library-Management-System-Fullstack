@@ -2,9 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useBookContext } from "../../context/bookContext";
 import axios from "axios";
 import { useState } from "react";
+import { useUserContext } from "../../context/userContext";
+import { toast } from "react-toastify";
+import { successNotification } from "../../tostify";
 
 const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
   const navigate = useNavigate();
+  const { isAdmin } = useUserContext();
   const { deleteBook } = useBookContext();
   const token = localStorage.getItem("token");
 
@@ -13,7 +17,13 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
 
   const handleDeleteBook = async () => {
     const deleted = await deleteBook(id);
-    if (deleted) navigate(0);
+    if (deleted) {
+      successNotification(`Book deleted successfully, please wait..`);
+
+      setTimeout(() => {
+        navigate(0);
+      }, 3000);
+    }
   };
 
   const handleBorrowBook = async () => {
@@ -27,7 +37,13 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
       }
     );
 
-    if (data.message === "Book Borrowed Successfully") navigate(0);
+    if (data.message === "Book Borrowed Successfully") {
+      successNotification(`${data.message}, please wait...`);
+
+      setTimeout(() => {
+        navigate(0);
+      }, 3000);
+    }
   };
 
   const handleReturnBook = async () => {
@@ -41,7 +57,13 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
       }
     );
 
-    if (data.message === "Book Returned Successfully") navigate(0);
+    if (data.message === "Book Returned Successfully") {
+      successNotification(`${data.message}, please wait...`);
+
+      setTimeout(() => {
+        navigate(0);
+      }, 3000);
+    }
   };
 
   return (
@@ -54,64 +76,69 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
           <h3 className="h5 fw-semibold mb-0">{title}</h3>
           <p className=" mt-0 text-success">{author}</p>
           <div className="cta">
-            {!borrowed ? (
-              <div className="">
-                {openBorrow && (
-                  <input
-                    type="text"
-                    onChange={(e) => setBorrowedPeriod(e.target.value)}
-                    value={borrowedPeriod}
-                    placeholder="borrow in days"
-                    className="form-control"
-                  />
-                )}
+            {!isAdmin ? (
+              !borrowed ? (
+                <div className="">
+                  {openBorrow && (
+                    <input
+                      type="text"
+                      onChange={(e) => setBorrowedPeriod(e.target.value)}
+                      value={borrowedPeriod}
+                      placeholder="borrow in days"
+                      className="form-control"
+                    />
+                  )}
 
-                {openBorrow ? (
-                  <div className="d-flex gap-2">
+                  {openBorrow ? (
+                    <div className="d-flex gap-2">
+                      <button
+                        onClick={handleBorrowBook}
+                        className="btn d-block btn-warning  my-2 flex-grow-1"
+                      >
+                        Borrow
+                      </button>
+                      <button
+                        onClick={() => setOpenBorrow(false)}
+                        className="btn d-block btn-outline-danger  my-2"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ) : (
                     <button
-                      onClick={handleBorrowBook}
-                      className="btn d-block btn-warning  my-2 flex-grow-1"
+                      onClick={() => setOpenBorrow(true)}
+                      className="btn d-block btn-warning w-100 my-2"
                     >
-                      Borrow
+                      Get This Book
                     </button>
-                    <button
-                      onClick={() => setOpenBorrow(false)}
-                      className="btn d-block btn-outline-danger  my-2"
-                    >
-                      X
-                    </button>
-                  </div>
-                ) : (
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={handleReturnBook}
+                  className="btn d-block btn-outline-success w-100 my-2"
+                >
+                  Return
+                </button>
+              )
+            ) : (
+              <div className="d-flex gap-2">
+                <Link
+                  to={`/products/updateBook/${id}`}
+                  className="btn d-block btn-info w-100 my-2"
+                >
+                  update
+                </Link>
+                {!borrowed && (
                   <button
-                    onClick={() => setOpenBorrow(true)}
-                    className="btn d-block btn-warning w-100 my-2"
+                    onClick={handleDeleteBook}
+                    className="btn d-block btn-danger w-100 my-2"
                   >
-                    Get This Book
+                    Delete
                   </button>
                 )}
               </div>
-            ) : (
-              <button
-                onClick={handleReturnBook}
-                className="btn d-block btn-outline-success w-100 my-2"
-              >
-                Return
-              </button>
             )}
-            <div className="d-flex gap-2">
-              <Link
-                to={`/products/updateBook/${id}`}
-                className="btn d-block btn-info w-100 my-2"
-              >
-                update
-              </Link>
-              <button
-                onClick={handleDeleteBook}
-                className="btn d-block btn-danger w-100 my-2"
-              >
-                Delete
-              </button>
-            </div>
           </div>
         </div>
 
