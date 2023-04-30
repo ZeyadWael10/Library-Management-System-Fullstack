@@ -35,16 +35,7 @@ router.put(
     ValidationFunction(validators.returnBookValidatinon),
     asyncHandler(BookController.returnBook)
 );
-router.get(
-    '/search/issued/:bookname',
-    ValidationFunction(validators.searchIssuedBooksValidatinon),
-    asyncHandler(BookController.searchIssuedBooks)
-);
-router.get(
-    '/search/borrowed/:bookname/:borrowingDate',
-    ValidationFunction(validators.searchBorrowedBooksValidatinon),
-    asyncHandler(BookController.searchBorrowedBooks)
-);
+
 router.patch(
     '/addBookPics/:BookId',
     myMulter({ validation: validObject }).array('image'),
