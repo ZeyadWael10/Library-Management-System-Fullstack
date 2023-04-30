@@ -9,6 +9,8 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
   const navigate = useNavigate();
   const { isAdmin, userBorrowedBooks, setUserBorrowedBooks } = useUserContext();
   const { deleteBook } = useBookContext();
+  const { books, setBooks } = useBookContext();
+
   const token = localStorage.getItem("token");
 
   const [openBorrow, setOpenBorrow] = useState(false);
@@ -41,9 +43,9 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
 
       setUserBorrowedBooks([...userBorrowedBooks, id]);
 
-      setTimeout(() => {
-        navigate(0);
-      }, 3000);
+      const newBooks = books.filter((book) => book._id !== id);
+
+      setBooks(newBooks);
     }
   };
 

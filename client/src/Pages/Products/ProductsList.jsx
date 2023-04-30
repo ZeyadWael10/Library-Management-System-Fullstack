@@ -36,9 +36,9 @@ const BooksList = () => {
         ) : (
           <Link
             to="/products/cart-items"
-            className="btn btn-outline-success position-relative"
+            className="btn btn-outline-success position-relative px-4"
           >
-            Your Cart{" "}
+            Your Cart <i className="fa-solid fa-cart-arrow-down"></i>
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
               {userBorrowedBooks.length}
             </span>

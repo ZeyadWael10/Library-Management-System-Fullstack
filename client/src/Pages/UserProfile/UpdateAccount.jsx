@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
+import { successNotification } from "../../tostify";
+import { useUserContext } from "../../context/userContext";
 
 const UpdateAccount = () => {
   const [user, setUser] = useState({
     name: "",
-    age: 0,
+    age: "",
   });
+  const { saveUserToLocalStorage } = useUserContext();
 
   const token = localStorage.getItem("token");
 
@@ -21,6 +24,15 @@ const UpdateAccount = () => {
     );
 
     console.log(data);
+    if (data.message === "Account Updated Successfully") {
+      successNotification(data.message);
+      saveUserToLocalStorage(data.Updateddata);
+      const resetInputs = {
+        name: "",
+        age: "",
+      };
+      setUser(resetInputs);
+    }
   };
 
   const handleChange = (event) => {
@@ -32,11 +44,7 @@ const UpdateAccount = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const data = await registerUser(user);
-
     updateUser();
-
-    // console.log(user);
   };
   return (
     <div className="py-4">
@@ -53,6 +61,7 @@ const UpdateAccount = () => {
             id="name"
             name="name"
             className="form-control"
+            value={user.name}
           />
         </div>
 
@@ -66,6 +75,7 @@ const UpdateAccount = () => {
             name="age"
             id="form2Example2"
             className="form-control"
+            value={user.age}
           />
         </div>
         <button className="btn btn-primary btn-block mt-1">Update</button>

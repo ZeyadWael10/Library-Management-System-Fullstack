@@ -85,6 +85,7 @@ export default function BookContextProvider({ children }) {
         updateBook,
         deleteBook,
         books,
+        setBooks,
       }}
     >
       {children}

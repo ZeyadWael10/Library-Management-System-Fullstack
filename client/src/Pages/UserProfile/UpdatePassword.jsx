@@ -4,7 +4,7 @@ import { useState } from "react";
 const UpdatePassword = () => {
   const [inputsData, setInputsData] = useState({
     password: "",
-    confirmPassword: 0,
+    confirmPassword: "",
   });
 
   const token = localStorage.getItem("token");
@@ -32,11 +32,7 @@ const UpdatePassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const data = await registerUser(user);
-
     newPassword();
-
-    // console.log(user);
   };
   return (
     <div className="py-4">
@@ -53,6 +49,7 @@ const UpdatePassword = () => {
             id="name"
             name="password"
             className="form-control"
+            value={inputsData.password}
           />
         </div>
 
@@ -66,6 +63,7 @@ const UpdatePassword = () => {
             name="confirmPassword"
             id="form2Example2"
             className="form-control"
+            value={inputsData.confirmPassword}
           />
         </div>
         <button className="btn btn-primary btn-block mt-1">Update</button>
