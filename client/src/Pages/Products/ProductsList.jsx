@@ -6,9 +6,7 @@ import { useUserContext } from "../../context/userContext";
 
 const BooksList = () => {
   const { fetchBooks, books } = useBookContext();
-  const { isAdmin, getUserFromLocalStorage } = useUserContext();
-
-  const userBorrowedBooks = getUserFromLocalStorage().borrowedBooks?.length;
+  const { isAdmin, userBorrowedBooks } = useUserContext();
 
   useEffect(() => {
     fetchBooks();
@@ -41,9 +39,9 @@ const BooksList = () => {
             className="btn btn-outline-success position-relative"
           >
             Your Cart{" "}
-            {/* <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-              {userBorrowedBooks}
-            </span> */}
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+              {userBorrowedBooks.length}
+            </span>
           </Link>
         )}
       </div>

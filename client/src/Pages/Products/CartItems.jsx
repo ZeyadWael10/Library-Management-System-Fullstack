@@ -6,19 +6,15 @@ import { useUserContext } from "../../context/userContext";
 
 const CartItems = () => {
   const { fetchBooks, books } = useBookContext();
-  const { getUserFromLocalStorage } = useUserContext();
-
-  const userBorrowedBooks = getUserFromLocalStorage().borrowedBooks;
+  const { userBorrowedBooks, setUserBorrowedBooks } = useUserContext();
 
   useEffect(() => {
     fetchBooks();
-    console.log(userBorrowedBooks);
   }, []);
 
   const renderedBooks = books
     ?.filter((book) => {
-      const isBorrowed = userBorrowedBooks.includes(book._id);
-      return book.isBorrowed === true && isBorrowed;
+      return book.isBorrowed === true && userBorrowedBooks.includes(book._id);
     })
     .map((book) => (
       <ProductItem

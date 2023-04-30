@@ -113,14 +113,19 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const { getUserFromLocalStorage, setIsLoggedIn, setIsAdmin } =
-    useUserContext();
+  const {
+    getUserFromLocalStorage,
+    setIsLoggedIn,
+    setIsAdmin,
+    userBorrowedBooks,
+    setUserBorrowedBooks,
+  } = useUserContext();
   const user = getUserFromLocalStorage();
 
   useEffect(() => {
     if (user) {
-      console.log(user);
       setIsAdmin(user.isAdmin);
+      setUserBorrowedBooks([...userBorrowedBooks, ...user.borrowedBooks]);
       setIsLoggedIn(true);
     } else <Navigate to="/login" />;
   }, []);

@@ -3,12 +3,11 @@ import { useBookContext } from "../../context/bookContext";
 import axios from "axios";
 import { useState } from "react";
 import { useUserContext } from "../../context/userContext";
-import { toast } from "react-toastify";
 import { successNotification } from "../../tostify";
 
 const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
   const navigate = useNavigate();
-  const { isAdmin } = useUserContext();
+  const { isAdmin, userBorrowedBooks, setUserBorrowedBooks } = useUserContext();
   const { deleteBook } = useBookContext();
   const token = localStorage.getItem("token");
 
@@ -40,6 +39,8 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
     if (data.message === "Book Borrowed Successfully") {
       successNotification(`${data.message}, please wait...`);
 
+      setUserBorrowedBooks([...userBorrowedBooks, id]);
+
       setTimeout(() => {
         navigate(0);
       }, 3000);
@@ -60,9 +61,13 @@ const ProductItem = ({ imgSrc, title, author, borrowed, id }) => {
     if (data.message === "Book Returned Successfully") {
       successNotification(`${data.message}, please wait...`);
 
-      setTimeout(() => {
-        navigate(0);
-      }, 3000);
+      const returnedBook = userBorrowedBooks.filter((book) => book !== id);
+
+      setUserBorrowedBooks(returnedBook);
+
+      console.log(userBorrowedBooks);
+
+      console.log(returnedBook);
     }
   };
 

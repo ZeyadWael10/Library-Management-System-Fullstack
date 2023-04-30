@@ -5,7 +5,7 @@ import { errorNotification, successNotification } from "../../tostify";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn, loginUser } = useUserContext();
+  const { setIsLoggedIn, loginUser, setUserBorrowedBooks } = useUserContext();
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -26,6 +26,7 @@ const Login = () => {
 
     if (message === "Login Success") {
       setIsLoggedIn(true);
+      setUserBorrowedBooks([...res.User.borrowedBooks]);
       successNotification("You are logged in", 2000);
 
       navigate("/");

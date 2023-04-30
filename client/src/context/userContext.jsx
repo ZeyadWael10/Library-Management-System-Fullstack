@@ -6,6 +6,7 @@ let UserContext = createContext({});
 export default function UserContextProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userBorrowedBooks, setUserBorrowedBooks] = useState([]);
 
   const saveUserToLocalStorage = (user) => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -63,6 +64,8 @@ export default function UserContextProvider({ children }) {
         getUserFromLocalStorage,
         saveTokenToLocalStorage,
         getTokenFromLocalStorage,
+        setUserBorrowedBooks,
+        userBorrowedBooks,
         loginUser,
         registerUser,
         logout,
