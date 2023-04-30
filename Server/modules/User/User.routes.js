@@ -62,4 +62,10 @@ router.patch(
     ValidationFunction(validators.uploadUserPicValidation),
     asyncHandler(UserContoller.uploadUserProfile)
 );
+router.get(
+    '/borrowedbooks',
+    auth(),
+    ValidationFunction(validators.getUserBorrowedBooksValidation),
+    asyncHandler(UserContoller.getUserBorrowedBooks)
+);
 export default router;
