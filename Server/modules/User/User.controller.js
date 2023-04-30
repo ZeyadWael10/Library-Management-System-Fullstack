@@ -169,3 +169,12 @@ export const uploadUserProfile = async (req, res, next) => {
     if (!user) next(new Error('User Notfound'));
     res.status(200).json({ message: 'Done' });
 };
+export const getUserBorrowedBooks = async (req,res,next)=>{
+    const { _id } = req.user;
+    const borrowedBooks = await UserModel.findById(_id).select("borrowedBooks").populate({
+        model:BookModel,
+        path:"borrowedBooks"
+    })
+    if (!borrowedBooks) next(new Error('User Did not Borrow a Book Yet'));
+    res.status(200).json({ message: 'Data Found', Books:borrowedBooks });
+}

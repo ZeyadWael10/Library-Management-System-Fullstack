@@ -173,3 +173,8 @@ export const resetPasswordValidation = {
             }),
         }),
 };
+export const getUserBorrowedBooksValidation = {
+    user: Joi.object().required().keys({
+        _id: Joi.string().required(),
+    }),
+};
